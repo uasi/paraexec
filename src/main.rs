@@ -93,7 +93,7 @@ fn main() -> std::io::Result<()> {
                 Ok(child) => child,
                 Err(err) => {
                     println!(
-                        "{:<width$} = failed to start: {}",
+                        "{:<width$}  = failed to start: {}",
                         spec.label,
                         err,
                         width = max_label_len
@@ -110,7 +110,7 @@ fn main() -> std::io::Result<()> {
             let stdout_handle = thread::spawn(move || {
                 let reader = BufReader::new(stdout);
                 for line in reader.lines().map_while(Result::ok) {
-                    println!("{:<width$} | {}", label, line, width = max_label_len);
+                    println!("{:<width$}  | {}", label, line, width = max_label_len);
                 }
             });
 
@@ -119,14 +119,14 @@ fn main() -> std::io::Result<()> {
             let stderr_handle = thread::spawn(move || {
                 let reader = BufReader::new(stderr);
                 for line in reader.lines().map_while(Result::ok) {
-                    println!("{:<width$} * {}", label, line, width = max_label_len);
+                    println!("{:<width$} !| {}", label, line, width = max_label_len);
                 }
             });
 
             let exit_status = child.wait()?;
 
             println!(
-                "{:<width$} = {}",
+                "{:<width$}  = {}",
                 spec.label,
                 exit_status,
                 width = max_label_len
